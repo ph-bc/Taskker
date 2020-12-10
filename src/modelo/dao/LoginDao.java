@@ -8,6 +8,6 @@ public interface LoginDao {
 	void insert(Login obj);
 	void update(Login obj);
 	void deleteById(Integer id);
-	Login findById(Integer id);
+	Login findUser(String usuario, String senha);
 	List<Login> findAll();
 }

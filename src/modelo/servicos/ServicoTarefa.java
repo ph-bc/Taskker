@@ -5,7 +5,6 @@ import java.util.List;
 import modelo.dao.GeradorDao;
 import modelo.dao.TarefaDao;
 import modelo.entidades.Login;
-import modelo.entidades.SubTarefa;
 import modelo.entidades.Tarefa;
 
 public class ServicoTarefa {
@@ -28,7 +27,7 @@ public class ServicoTarefa {
 		}
 	}
 
-	public void remove(SubTarefa obj) {
-		dao.deleteById(obj.getCod());
+	public void remove(Tarefa obj) {
+		dao.deleteByCod(obj.getCod());
 	}
 }

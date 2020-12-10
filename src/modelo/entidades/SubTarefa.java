@@ -9,7 +9,6 @@ public class SubTarefa implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-	
 	private Integer cod;
 	private String nome;
 	private String descricao;

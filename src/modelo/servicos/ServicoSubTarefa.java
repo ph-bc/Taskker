@@ -28,6 +28,6 @@ public class ServicoSubTarefa {
 	}
 
 	public void remove(SubTarefa obj) {
-		dao.deleteById(obj.getCod());
+		dao.deleteByCod(obj.getCod());
 	}
 }

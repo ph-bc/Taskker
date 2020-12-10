@@ -66,35 +66,35 @@ public class SubTarefaDaoJDBC implements SubTarefaDao {
 	public void update(SubTarefa obj) {
 		PreparedStatement st = null;
 		try {
-			st = conn.prepareStatement("UPDATE subtarefa SET nome = ? WHERE cod = ?");
-			
+			st = conn.prepareStatement(
+					"UPDATE subtarefa SET nome = ?, descricao = ?, dataPrazo = ?, status = ? WHERE cod = ?");
+
 			st.setString(1, obj.getNome());
-			st.setInt(2, obj.getCod());
-			
+			st.setString(2, obj.getDescricao());
+			st.setDate(3, new java.sql.Date(obj.getDataPrazo().getTime()));
+			st.setString(4, obj.getStatus().name());
+			st.setInt(5, obj.getCod());
+
 			st.executeUpdate();
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
-		}
-		finally {
+		} finally {
 			DB.closeStatement(st);
 		}
 	}
 
 	@Override
-	public void deleteById(Integer id) {
+	public void deleteByCod(Integer id) {
 		PreparedStatement st = null;
 		try {
 			st = conn.prepareStatement("DELETE FROM subtarefa WHERE cod = ?");
-			
+
 			st.setInt(1, id);
-			
+
 			st.executeUpdate();
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
-		}
-		finally {
+		} finally {
 			DB.closeStatement(st);
 		}
 
@@ -106,11 +106,9 @@ public class SubTarefaDaoJDBC implements SubTarefaDao {
 		ResultSet rs = null;
 		try {
 			st = conn.prepareStatement(
-					"SELECT subtarefa.*, tarefa.nome as tarefaNome "
-					+ "FROM subtarefa INNER JOIN tarefa "
-					+ "ON subtarefa.codTarefa = tarefa.cod "
-					+ "WHERE subtarefa.cod = ?");
-			
+					"SELECT subtarefa.*, tarefa.nome as tarefaNome " + "FROM subtarefa INNER JOIN tarefa "
+							+ "ON subtarefa.codTarefa = tarefa.cod " + "WHERE subtarefa.cod = ?");
+
 			st.setInt(1, id);
 			rs = st.executeQuery();
 			if (rs.next()) {
@@ -119,11 +117,9 @@ public class SubTarefaDaoJDBC implements SubTarefaDao {
 				return obj;
 			}
 			return null;
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
-		}
-		finally {
+		} finally {
 			DB.closeStatement(st);
 			DB.closeResultSet(rs);
 		}
@@ -134,35 +130,30 @@ public class SubTarefaDaoJDBC implements SubTarefaDao {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
-			st = conn.prepareStatement(
-					"SELECT subtarefa.*, tarefa.nome as tarefaNome "
-					+ "FROM subtarefa INNER JOIN tarefa "
-					+ "ON subtarefa.codTarefa = tarefa.cod "
-					+ "ORDER BY nome");
-			
+			st = conn.prepareStatement("SELECT subtarefa.*, tarefa.nome as tarefaNome "
+					+ "FROM subtarefa INNER JOIN tarefa " + "ON subtarefa.codTarefa = tarefa.cod " + "ORDER BY dataCriacao DESC");
+
 			rs = st.executeQuery();
-			
+
 			List<SubTarefa> list = new ArrayList<>();
 			Map<Integer, Tarefa> map = new HashMap<>();
-			
+
 			while (rs.next()) {
-				
+
 				Tarefa tar = map.get(rs.getInt("codTarefa"));
-				
+
 				if (tar == null) {
 					tar = instanciarTarefa(rs);
 					map.put(rs.getInt("codTarefa"), tar);
 				}
-				
+
 				SubTarefa obj = instanciarSubTarefa(rs, tar);
 				list.add(obj);
 			}
 			return list;
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
-		}
-		finally {
+		} finally {
 			DB.closeStatement(st);
 			DB.closeResultSet(rs);
 		}
@@ -174,42 +165,37 @@ public class SubTarefaDaoJDBC implements SubTarefaDao {
 		ResultSet rs = null;
 		try {
 			st = conn.prepareStatement(
-					"SELECT subtarefa.*, tarefa.nome as tarefaNome "
-					+ "FROM subtarefa INNER JOIN tarefa "
-					+ "ON subtarefa.codTarefa = tarefa.cod "
-					+ "WHERE codTarefa = ? "
-					+ "ORDER BY nome");
-			
+					"SELECT subtarefa.*, tarefa.nome as tarefaNome FROM subtarefa INNER JOIN tarefa "
+					+ "ON subtarefa.codTarefa = tarefa.cod WHERE codTarefa = ? ORDER BY dataCriacao DESC");
+
 			st.setInt(1, tarefa.getCod());
-			
+
 			rs = st.executeQuery();
-			
+
 			List<SubTarefa> list = new ArrayList<>();
 			Map<Integer, Tarefa> map = new HashMap<>();
-			
+
 			while (rs.next()) {
-				
+
 				Tarefa tar = map.get(rs.getInt("codTarefa"));
-				
+
 				if (tar == null) {
 					tar = instanciarTarefa(rs);
 					map.put(rs.getInt("codTarefa"), tar);
 				}
-				
+
 				SubTarefa obj = instanciarSubTarefa(rs, tar);
 				list.add(obj);
 			}
 			return list;
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
-		}
-		finally {
+		} finally {
 			DB.closeStatement(st);
 			DB.closeResultSet(rs);
 		}
 	}
-	
+
 	private SubTarefa instanciarSubTarefa(ResultSet rs, Tarefa tarefa) throws SQLException {
 		SubTarefa obj = new SubTarefa();
 		obj.setCod(rs.getInt("cod"));
@@ -227,7 +213,6 @@ public class SubTarefaDaoJDBC implements SubTarefaDao {
 		tarefa.setCod(rs.getInt("codTarefa"));
 		tarefa.setNome(rs.getString("tarefaNome"));
 		tarefa.setDataCriacao(new java.util.Date(rs.getTimestamp("dataCriacao").getTime()));
-		tarefa.setStatus(rs.getString("status"));
 		return tarefa;
 	}
 }

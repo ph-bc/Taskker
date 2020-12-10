@@ -95,13 +95,14 @@ public class LoginDaoJDBC implements LoginDao {
 	}
 
 	@Override
-	public Login findById(Integer id) {
+	public Login findUser(String usuario, String senha) {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
 			st = conn.prepareStatement(
-				"SELECT * FROM login WHERE Id = ?");
-			st.setInt(1, id);
+				"SELECT * FROM login WHERE BINARY usuario = ? AND BINARY senha = ?");
+			st.setString(1, usuario);
+			st.setString(2, senha);
 			rs = st.executeQuery();
 			if (rs.next()) {
 				Login obj = new Login();

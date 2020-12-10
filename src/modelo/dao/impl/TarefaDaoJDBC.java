@@ -29,13 +29,12 @@ public class TarefaDaoJDBC implements TarefaDao {
 		PreparedStatement st = null;
 		try {
 			st = conn.prepareStatement(
-					"INSERT INTO tarefa (nome, dataCriacao, status, loginId) " + "VALUES (?, ?, ?, ?)",
+					"INSERT INTO tarefa (nome, dataCriacao, loginId) " + "VALUES (?, ?, ?)",
 					Statement.RETURN_GENERATED_KEYS);
 
 			st.setString(1, obj.getNome());
 			st.setDate(2, new java.sql.Date(obj.getDataCriacao().getTime()));
-			st.setString(3, obj.getStatus().name());
-			st.setInt(4, obj.getLogin().getId());
+			st.setInt(3, obj.getLogin().getId());
 
 			int rowsAffected = st.executeUpdate();
 
@@ -74,7 +73,7 @@ public class TarefaDaoJDBC implements TarefaDao {
 	}
 
 	@Override
-	public void deleteById(Integer id) {
+	public void deleteByCod(Integer id) {
 		PreparedStatement st = null;
 		try {
 			st = conn.prepareStatement("DELETE FROM tarefa WHERE cod = ?");
@@ -119,8 +118,8 @@ public class TarefaDaoJDBC implements TarefaDao {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
-			st = conn.prepareStatement("SELECT tarefa.*, login.usuario as logUser, login.senha as logSenha "
-					+ "FROM tarefa INNER JOIN login ON tarefa.loginId = login.id ORDER BY nome");
+			st = conn.prepareStatement("SELECT tarefa.*, login.usuario as logUser, login.senha as logSenha FROM tarefa "
+					+ "INNER JOIN login ON tarefa.loginId = login.id ORDER BY nome");
 
 			rs = st.executeQuery();
 
@@ -190,7 +189,6 @@ public class TarefaDaoJDBC implements TarefaDao {
 		obj.setCod(rs.getInt("cod"));
 		obj.setNome(rs.getString("nome"));
 		obj.setDataCriacao(new java.util.Date(rs.getTimestamp("dataCriacao").getTime()));
-		obj.setStatus(rs.getString("status"));
 		obj.setLogin(login);
 		return obj;
 	}

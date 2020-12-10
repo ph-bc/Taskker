@@ -3,8 +3,6 @@ package modelo.entidades;
 import java.io.Serializable;
 import java.util.Date;
 
-import modelo.enums.Situacao;
-
 public class Tarefa implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -13,17 +11,14 @@ public class Tarefa implements Serializable {
 	private String nome;
 	private Date dataCriacao;
 	
-	private Situacao status;
-	
 	private Login login;
 	
 	public Tarefa() {}
 
-	public Tarefa(Integer cod, String nome, Date dataCriacao, Situacao status, Login login) {
+	public Tarefa(Integer cod, String nome, Date dataCriacao, Login login) {
 		this.cod = cod;
 		this.nome = nome;
 		this.dataCriacao = dataCriacao;
-		this.status = status;
 		this.login = login;
 	}
 
@@ -49,14 +44,6 @@ public class Tarefa implements Serializable {
 
 	public void setDataCriacao(Date dataCriacao) {
 		this.dataCriacao = dataCriacao;
-	}
-
-	public Situacao getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = Situacao.valueOf(status);
 	}
 
 	public Login getLogin() {
@@ -94,7 +81,6 @@ public class Tarefa implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Tarefa [cod=" + cod + ", nome=" + nome + ", dataCriacao=" + dataCriacao + ", status=" + status
-				+ ", login=" + login + "]";
+		return "Tarefa [cod=" + cod + ", nome=" + nome + ", dataCriacao=" + dataCriacao + ", login=" + login + "]";
 	}
 }

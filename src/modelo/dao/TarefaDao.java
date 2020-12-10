@@ -8,7 +8,7 @@ import modelo.entidades.Tarefa;
 public interface TarefaDao {
 	void insert(Tarefa obj);
 	void update(Tarefa obj);
-	void deleteById(Integer id);
+	void deleteByCod(Integer id);
 	Tarefa findById(Integer id);
 	List<Tarefa> findAll();
 	List<Tarefa> findByLogin(Login login);
